@@ -31,6 +31,19 @@ pip install pytest
 pytest tests/ -v
 ```
 
+### Integration Tests
+
+To run integration tests with real Darwinex FTP credentials:
+
+```bash
+export DARWINEX_USER="your_username"
+export DARWINEX_PASS="your_password"
+export DARWINEX_HOST="tickdata.darwinex.com"  # optional, default provided
+pytest tests/test_integration.py -v
+```
+
+Integration tests will be skipped if credentials are not provided.
+
 
 ## Example 
 
