@@ -133,13 +133,14 @@ class DarwinexTicksConnection:
                     for retry in range(self.num_retries):
                         self._get_file(_file)
                         # Construct DataFrame
+                        # Using read_csv instead of deprecated read_table
+                        # Using on_bad_lines='skip' for robustness
                         data_pro = [
-                            _pd.read_table(self._virtual_dl, compression='gzip',
-                                           sep=',', header=None,
-                                           lineterminator='\n',
-                                           names=['Time', pos, pos + '_size'],
-                                           index_col='Time', parse_dates=[0],
-                                           date_parser=self._parser)]
+                            _pd.read_csv(self._virtual_dl, compression='gzip',
+                                         sep=',', header=None,
+                                         names=['Time', pos, pos + '_size'],
+                                         index_col='Time',
+                                         on_bad_lines='skip')]
                         if len(data_pro) > 0:
                             right_download += 1
                             break
@@ -168,7 +169,7 @@ class DarwinexTicksConnection:
                     except TypeError:
                         print('*', end=""),
 
-            data[posit] = _pd.concat(data_rec, sort=True, axis=0,
+            data[posit] = _pd.concat(data_rec, axis=0,
                                      verify_integrity=False)
 
         if len(posits) == 2:
@@ -266,7 +267,7 @@ def _dw_time_to_utc(times):
 
 
 def to_darwinex_time(data):
-    if data.index.is_all_dates:
+    if hasattr(data.index, 'dtype') and _pd.api.types.is_datetime64_any_dtype(data.index):
         data.index = (
                 (data.index.tz_convert('America/New_York')) + _pd.Timedelta(
             '07:00:00')).tz_localize(None).tz_localize('Etc/GMT+2')
@@ -276,7 +277,7 @@ def to_darwinex_time(data):
 
 
 def _index_utc_to_mt_time(serie):
-    if serie.is_all_dates:
+    if hasattr(serie, 'dtype') and _pd.api.types.is_datetime64_any_dtype(serie):
         serie = ((serie.tz_convert('America/New_York')) +
                  _pd.Timedelta('07:00:00')).tz_localize(
             None).tz_localize('Etc/GMT+2')

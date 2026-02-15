@@ -14,8 +14,22 @@ The data is returned as a Pandas dataframe.
 
 `pip install Darwinex-ticks`
     
-Pandas library is required. Ipywidgets optional, only for progress bar in 
-Jupyter notebooks.
+### Requirements
+- pandas >= 1.5.0
+- ipywidgets >= 8.0.0 (optional, for progress bar in Jupyter notebooks)
+
+For development/testing:
+- pytest >= 7.0.0
+
+
+## Testing
+
+Run tests with pytest:
+
+```bash
+pip install pytest
+pytest tests/ -v
+```
 
 
 ## Example 

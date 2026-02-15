@@ -16,7 +16,7 @@ setup(
     license='MIT',
     author='Paduel',
     author_email='paduel@gmail.com',
-    install_requires=['pandas'],
+    install_requires=['pandas>=1.5.0'],
     description=DESCRIPTION,
     long_description=long_description,
     long_description_content_type='text/markdown',
